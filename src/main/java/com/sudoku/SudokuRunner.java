@@ -1,11 +1,10 @@
 package com.sudoku;
 
 import com.sudoku.exception.OccupiedFieldException;
-import com.sudoku.exception.ValueOutOfBoundsException;
 
 public class SudokuRunner {
 
-    public static void main(String[] args) throws ValueOutOfBoundsException {
+    public static void main(String[] args) {
 
         UserInput userInput = new UserInput();
         SudokuGame game = new SudokuGame();
@@ -15,7 +14,7 @@ public class SudokuRunner {
             UserResponse userResponse = userInput.getInput();
             switch (userResponse.getResponseStatus()) {
                 case ENDGAME -> System.exit(0);
-                case SUDOKU -> System.exit(0);
+                case SUDOKU -> game.resolveSudoku();
                 case COORDINATES_VALUE -> {
                     try {
                         game.placeNumberOnTheBoard(userResponse);
@@ -25,7 +24,6 @@ public class SudokuRunner {
                 }
             }
         }
-
 
     }
 }

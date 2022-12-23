@@ -1,7 +1,6 @@
 package com.sudoku;
 
 import com.sudoku.exception.OccupiedFieldException;
-import com.sudoku.exception.ValueOutOfBoundsException;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -45,7 +44,7 @@ public class SudokuTestSuite {
     }
 
     @Test
-    void testSudokuElementSetValueRemovesFromPossibleValues() throws ValueOutOfBoundsException {
+    void testSudokuElementSetValueRemovesFromPossibleValues() {
         //Given
         SudokuElement sudokuElement = new SudokuElement();
 
@@ -59,7 +58,7 @@ public class SudokuTestSuite {
     }
 
     @Test
-    void testSudokuGameColumnAlreadyContainsValue() throws ValueOutOfBoundsException, OccupiedFieldException {
+    void testSudokuGameColumnAlreadyContainsValue() throws OccupiedFieldException {
         //Given
         SudokuGame sudokuGame= new SudokuGame();
         UserResponse userResponse = new UserResponse(3,8,9,UserResponseStatus.COORDINATES_VALUE);
@@ -85,7 +84,7 @@ public class SudokuTestSuite {
     }
 
     @Test
-    void testSudokuGameRowAlreadyContainsValue() throws ValueOutOfBoundsException, OccupiedFieldException {
+    void testSudokuGameRowAlreadyContainsValue() throws OccupiedFieldException {
         //Given
         SudokuGame sudokuGame= new SudokuGame();
         UserResponse userResponse = new UserResponse(3,4,1,UserResponseStatus.COORDINATES_VALUE);
@@ -111,7 +110,7 @@ public class SudokuTestSuite {
     }
 
     @Test
-    void testSudokuGameSectionAlreadyContainsValue() throws ValueOutOfBoundsException, OccupiedFieldException {
+    void testSudokuGameSectionAlreadyContainsValue() throws OccupiedFieldException {
         //Given
         SudokuGame sudokuGame= new SudokuGame();
         UserResponse userResponse = new UserResponse(3,4,2,UserResponseStatus.COORDINATES_VALUE);
@@ -138,5 +137,23 @@ public class SudokuTestSuite {
         assertFalse(sudokuGame.sectionAlreadyContainsValue(userResponse6));
         assertFalse(sudokuGame.sectionAlreadyContainsValue(userResponse7));
         assertFalse(sudokuGame.sectionAlreadyContainsValue(userResponse8));
+    }
+
+    @Test
+    void testSudokuBoardDeepCopy() {
+        //Given
+        SudokuBoard sudokuBoard = new SudokuBoard();
+        sudokuBoard.getSudokuRowList().get(3).getSudokuElementList().get(3).getPossibleValues().removeIf(v -> v > 3);
+
+        //When
+        SudokuBoard sudokuBoardDeepCopied = sudokuBoard.deepCopy();
+        sudokuBoard.getSudokuRowList().get(3).getSudokuElementList().get(3).getPossibleValues().removeIf(v -> v > 2);
+        sudokuBoard.getSudokuRowList().get(3).getSudokuElementList().get(5).setValue(4);
+
+        //Then
+        assertEquals(2, sudokuBoard.getSudokuRowList().get(3).getSudokuElementList().get(3).getPossibleValues().size());
+        assertEquals(3, sudokuBoardDeepCopied.getSudokuRowList().get(3).getSudokuElementList().get(3).getPossibleValues().size());
+        assertEquals(4, sudokuBoard.getSudokuRowList().get(3).getSudokuElementList().get(5).getValue());
+        assertEquals(-1, sudokuBoardDeepCopied.getSudokuRowList().get(3).getSudokuElementList().get(5).getValue());
     }
 }
