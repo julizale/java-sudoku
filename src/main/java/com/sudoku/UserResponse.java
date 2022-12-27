@@ -7,7 +7,6 @@ public class UserResponse {
     private final int value;
     private final UserResponseStatus userResponseStatus;
 
-
     public UserResponse(final int column, final int row, final int value, final UserResponseStatus userResponseStatus) {
             this.column = column;
             this.row = row;

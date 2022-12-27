@@ -1,9 +1,8 @@
 package com.sudoku;
 
+import com.sudoku.exception.InvalidValueException;
 import com.sudoku.exception.OccupiedFieldException;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -44,21 +43,7 @@ public class SudokuTestSuite {
     }
 
     @Test
-    void testSudokuElementSetValueRemovesFromPossibleValues() {
-        //Given
-        SudokuElement sudokuElement = new SudokuElement();
-
-        //When
-        sudokuElement.setValue(4);
-        List<Integer> valuesAfterSet = sudokuElement.getPossibleValues();
-
-        //Then
-        assertEquals(8, valuesAfterSet.size());
-        assertFalse(valuesAfterSet.contains(4));
-    }
-
-    @Test
-    void testSudokuGameColumnAlreadyContainsValue() throws OccupiedFieldException {
+    void testSudokuGameColumnAlreadyContainsValue() throws OccupiedFieldException, InvalidValueException {
         //Given
         SudokuGame sudokuGame= new SudokuGame();
         UserResponse userResponse = new UserResponse(3,8,9,UserResponseStatus.COORDINATES_VALUE);
@@ -84,7 +69,7 @@ public class SudokuTestSuite {
     }
 
     @Test
-    void testSudokuGameRowAlreadyContainsValue() throws OccupiedFieldException {
+    void testSudokuGameRowAlreadyContainsValue() throws OccupiedFieldException, InvalidValueException {
         //Given
         SudokuGame sudokuGame= new SudokuGame();
         UserResponse userResponse = new UserResponse(3,4,1,UserResponseStatus.COORDINATES_VALUE);
@@ -110,7 +95,7 @@ public class SudokuTestSuite {
     }
 
     @Test
-    void testSudokuGameSectionAlreadyContainsValue() throws OccupiedFieldException {
+    void testSudokuGameSectionAlreadyContainsValue() throws OccupiedFieldException, InvalidValueException {
         //Given
         SudokuGame sudokuGame= new SudokuGame();
         UserResponse userResponse = new UserResponse(3,4,2,UserResponseStatus.COORDINATES_VALUE);
@@ -137,23 +122,5 @@ public class SudokuTestSuite {
         assertFalse(sudokuGame.sectionAlreadyContainsValue(userResponse6));
         assertFalse(sudokuGame.sectionAlreadyContainsValue(userResponse7));
         assertFalse(sudokuGame.sectionAlreadyContainsValue(userResponse8));
-    }
-
-    @Test
-    void testSudokuBoardDeepCopy() {
-        //Given
-        SudokuBoard sudokuBoard = new SudokuBoard();
-        sudokuBoard.getSudokuRowList().get(3).getSudokuElementList().get(3).getPossibleValues().removeIf(v -> v > 3);
-
-        //When
-        SudokuBoard sudokuBoardDeepCopied = sudokuBoard.deepCopy();
-        sudokuBoard.getSudokuRowList().get(3).getSudokuElementList().get(3).getPossibleValues().removeIf(v -> v > 2);
-        sudokuBoard.getSudokuRowList().get(3).getSudokuElementList().get(5).setValue(4);
-
-        //Then
-        assertEquals(2, sudokuBoard.getSudokuRowList().get(3).getSudokuElementList().get(3).getPossibleValues().size());
-        assertEquals(3, sudokuBoardDeepCopied.getSudokuRowList().get(3).getSudokuElementList().get(3).getPossibleValues().size());
-        assertEquals(4, sudokuBoard.getSudokuRowList().get(3).getSudokuElementList().get(5).getValue());
-        assertEquals(-1, sudokuBoardDeepCopied.getSudokuRowList().get(3).getSudokuElementList().get(5).getValue());
     }
 }

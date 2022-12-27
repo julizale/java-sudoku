@@ -14,10 +14,6 @@ public class SudokuBoard {
         }
     }
 
-    public SudokuBoard(final List<SudokuRow> sudokuRowList) {
-        this.sudokuRowList = sudokuRowList;
-    }
-
     public List<SudokuRow> getSudokuRowList() {
         return sudokuRowList;
     }
@@ -38,19 +34,5 @@ public class SudokuBoard {
             stringBuilder.append("\n  -------------------------------------\n");
         }
         return stringBuilder.toString();
-    }
-
-    public SudokuBoard deepCopy() {
-
-        List<SudokuRow> sudokuRows = new ArrayList<>();
-        for (int row = 0; row < 9; row++) {
-            List<SudokuElement> sudokuElements = new ArrayList<>();
-            for (int column = 0; column < 9; column++) {
-                List<Integer> possibleValues = new ArrayList<>(this.getSudokuRowList().get(row).getSudokuElementList().get(column).getPossibleValues());
-                sudokuElements.add(new SudokuElement(this.sudokuRowList.get(row).getSudokuElementList().get(column).getValue(), possibleValues));
-            }
-            sudokuRows.add(new SudokuRow(sudokuElements));
-        }
-        return new SudokuBoard(sudokuRows);
     }
 }
